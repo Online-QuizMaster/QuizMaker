@@ -1,0 +1,46 @@
+.analytics {
+    padding: 50px 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+  }
+  
+  .analytics h2 {
+    font-size: 36px;
+    margin-bottom: 40px;
+    font-family: 'Poppins', sans-serif;
+  font-weight:800;
+  }
+  
+  .analytics-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .analytics-card {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    width: 300px;
+  }
+  
+  .analytics-card img {
+    width: 50px;
+    margin-bottom: 10px;
+  }
+  
+  .analytics-card h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-weight:800;
+  }
+  
+  .analytics-card p {
+    font-size: 14px;
+    color: #666;
+  }

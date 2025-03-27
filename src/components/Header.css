@@ -1,0 +1,90 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 30px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .ram{
+    font-family: 'Poppins', sans-serif;
+
+  }
+  
+  .logo-nav {
+    display: flex;
+    align-items: center;
+
+    
+  }
+  
+  .logo {
+    width: 4vw;
+    height: auto;
+  }
+  
+  .left-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+    margin-top: 16px;
+    margin-left: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  
+  .left-nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+  }
+  
+  .left-nav ul li a:hover {
+    color: #ff6f61;
+    
+    font-weight: 800;
+
+  }
+  
+  .auth-buttons {
+    display: flex;
+    gap: 10px;
+    
+  }
+  
+  .auth-button {
+    padding: 8px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    text-align: center;
+    width:10vw;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .signup-button {
+    
+    background-color: #fff;
+    color: #ff6f61;
+    border: 1px solid #ff6f61;
+  }
+  
+  .signup-button:hover {
+    background-color: #e65b50;
+    color: white;
+  }
+  
+  .login-button {
+    background-color: #fff;
+    color: #ff6f61;
+    border: 1px solid #ff6f61;
+  }
+  
+  .login-button:hover {
+    background-color: #ff6f61;
+    color: #fff;
+  }

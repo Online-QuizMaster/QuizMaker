@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+import Header from './components/Header';
+import Home from './components/Home';
+import CreateAccount from './components/CreateAccount';
+import Login from './components/Login';         
+import QuizDashboard from './components/QuizDashboard';
 
-function App() {
+const BlankLayout = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header />
+      <main>
+        <div className="bg-overlay"></div>
+        <Outlet />
+      </main>
+    </>
   );
-}
+};
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <BlankLayout />,
+    children: [
+      { path: '/', element: <Home /> },
+      {path: '/quiz', element:<QuizDashboard/>}
+    ],
+  },
+  {
+    path: '/signup',
+    element: <CreateAccount />,
+  },
+  {path:'/login',
+    element:<Login/>
+  },
+  
+]);
+
+const App = () => {
+  return <RouterProvider router={router} />;
+};
 
 export default App;
