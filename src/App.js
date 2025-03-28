@@ -6,6 +6,8 @@ import Home from './components/Home';
 import CreateAccount from './components/CreateAccount';
 import Login from './components/Login';         
 import QuizDashboard from './components/QuizDashboard';
+import Profile from './components/Profile';
+import QuizForm from './components/QuizForm';
 
 const BlankLayout = () => {
   return (
@@ -25,7 +27,9 @@ const router = createBrowserRouter([
     element: <BlankLayout />,
     children: [
       { path: '/', element: <Home /> },
-      {path: '/quiz', element:<QuizDashboard/>}
+      {path: '/quiz', element:<QuizDashboard/>},
+      {path:'/profile', element:<Profile/>},
+      {path:'create',element:<QuizForm/>}
     ],
   },
   {
