@@ -8,7 +8,7 @@ const Login = () => {
     password: '',
   });
   const [error, setError] = useState('');
-  const navigate = useNavigate(); // Use useNavigate instead of useHistory
+  const navigate = useNavigate(); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,10 +17,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login form submitted:', formData);
 
     try {
-      // Send POST request to Flask backend
       const response = await fetch('http://127.0.0.1:5000/api/login', {
         method: 'POST',
         headers: {
@@ -29,14 +27,15 @@ const Login = () => {
         body: JSON.stringify(formData),
       });
 
+      const data = await response.json();
+      console.log('Response data:', data);
       if (response.ok) {
-        const data = await response.json();
-        console.log(data);
-        // Redirect to dashboard or another page upon success
-        navigate('/'); // Use navigate instead of history.push
+        // Save token and name in local storage
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('name', data.name);
+        navigate('/'); // Redirect to homepage or dashboard
       } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'Login failed');
+        setError(data.message || 'Login failed');
       }
     } catch (error) {
       console.error('Error:', error);

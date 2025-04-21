@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './QuizDashboard.css';
 import java from '../Assets/java.png';
 import apti from '../Assets/apti.png';
 import cn from '../Assets/cn.webp';
 import dbms from '../Assets/dbms.webp';
+import axios from 'axios';
+import { getUserTypeFromToken } from '../utils/auth'; // <--- Import here
 
-// Sample quiz data (you can replace this with an API call or dynamic data)
-const quizzes = [
+const staticQuizzes = [ 
   {
     id: 1,
     title: 'Java/OOp',
@@ -36,14 +37,38 @@ const quizzes = [
     updated: 'Updated 5 days ago',
     image: dbms,
   },
-];
+ ];
 
 const QuizDashboard = () => {
+  const [quizzes, setQuizzes] = useState(staticQuizzes);
+  const [userType, setUserType] = useState(null);
+
+  useEffect(() => {
+    setUserType(getUserTypeFromToken()); // ← cleaner now!
+
+    const fetchQuizzes = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/get-all-quizzes');
+        const apiQuizzes = response.data.quizzes.map((quiz) => ({
+          id: quiz._id,
+          title: quiz.title,
+          description: quiz.description,
+          updated: 'Just now',
+          image: java,
+        }));
+        setQuizzes((prevQuizzes) => [...prevQuizzes, ...apiQuizzes]);
+      } catch (error) {
+        console.error('Error fetching quizzes:', error);
+      }
+    };
+
+    fetchQuizzes();
+  }, []);
+
   return (
     <div className="qd-quiz-dashboard">
-      {/* Quiz Section */}
       <div className="qd-quiz-section">
-        <p className="qd-quiz-count">4 quizzes found</p>
+        <p className="qd-quiz-count">{quizzes.length} quizzes found</p>
         <div className="qd-quiz-grid">
           {quizzes.map((quiz) => (
             <div key={quiz.id} className="qd-quiz-card">
@@ -61,16 +86,16 @@ const QuizDashboard = () => {
         </div>
       </div>
 
-      {/* Create Quiz Button */}
-      <div className="qd-create-quiz-section">
-        <Link to="/create-quiz" className="qd-create-quiz-btn">
-          Create Quiz
-        </Link>
-      </div>
+      {/* Conditionally Render Create Quiz Button for Teacher */}
+      {userType === 'teacher' && (
+        <div className="qd-create-quiz-section">
+          <Link to="/create" className="qd-create-quiz-btn">
+            Create Quiz
+          </Link>
+        </div>
+      )}
 
-      {/* Footer (Visily watermark) */}
-      <footer className="qd-footer">
-      </footer>
+      <footer className="qd-footer"></footer>
     </div>
   );
 };

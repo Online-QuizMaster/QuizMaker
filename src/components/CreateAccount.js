@@ -7,6 +7,7 @@ const CreateAccount = () => {
     fullName: "",
     email: "",
     password: "",
+    userType: "student" // Default to student
   });
   const [error, setError] = useState(""); // Add error state
   const [loading, setLoading] = useState(false); // Add loading state
@@ -98,6 +99,19 @@ const CreateAccount = () => {
             >
               {showPassword ? "Hide" : "Show"}
             </span>
+          </div>
+          <div className="input-group">
+            <select
+              name="userType"
+              value={formData.userType}
+              onChange={handleChange}
+              required
+              disabled={loading}
+              className="user-type-select"
+            >
+              <option value="student">Student</option>
+              <option value="teacher">Teacher</option>
+            </select>
           </div>
           <button 
             type="submit" 

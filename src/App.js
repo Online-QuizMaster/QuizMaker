@@ -8,6 +8,7 @@ import Login from './components/Login';
 import QuizDashboard from './components/QuizDashboard';
 import Profile from './components/Profile';
 import QuizForm from './components/QuizForm';
+import QuizPage from './components/QuizPage';
 
 const BlankLayout = () => {
   return (
@@ -29,7 +30,8 @@ const router = createBrowserRouter([
       { path: '/', element: <Home /> },
       {path: '/quiz', element:<QuizDashboard/>},
       {path:'/profile', element:<Profile/>},
-      {path:'create',element:<QuizForm/>}
+      {path:'/create',element:<QuizForm/>},
+      {path:"/quiz/:quizId", element:<QuizPage/>}
     ],
   },
   {

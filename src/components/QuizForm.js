@@ -1,5 +1,8 @@
+// src/components/QuizForm.js
 import React, { useState } from 'react';
-import './QuizForm.css';
+import axios from 'axios';
+import { getTeacherId } from '../utils/auth'; // Import the function from auth.js
+import './QuizForm.css'; // Make sure you have a corresponding CSS file
 
 const QuizForm = () => {
   const [quizTitle, setQuizTitle] = useState('');
@@ -13,6 +16,7 @@ const QuizForm = () => {
     },
   ]);
 
+  // Function to add a new question
   const addQuestion = () => {
     setQuestions([
       ...questions,
@@ -25,17 +29,20 @@ const QuizForm = () => {
     ]);
   };
 
+  // Function to remove a question
   const removeQuestion = (id) => {
-    if (questions.length === 1) return; // Prevent removing the last question
+    if (questions.length === 1) return; // At least one question should remain
     setQuestions(questions.filter((q) => q.id !== id));
   };
 
+  // Function to update the question text
   const updateQuestionText = (id, text) => {
     setQuestions(
       questions.map((q) => (q.id === id ? { ...q, text } : q))
     );
   };
 
+  // Function to update options
   const updateOption = (questionId, optionIndex, value) => {
     setQuestions(
       questions.map((q) =>
@@ -50,7 +57,6 @@ const QuizForm = () => {
       )
     );
   };
-
   const setCorrectAnswer = (questionId, optionIndex) => {
     setQuestions(
       questions.map((q) =>
@@ -59,14 +65,52 @@ const QuizForm = () => {
     );
   };
 
-  const handleSubmit = (e) => {
+  // Submit handler
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({
+
+    const teacherId = getTeacherId(); // Get the teacher ID from the token
+    console.log('Teacher ID:', teacherId); // Log the teacher ID for debugging
+    if (!teacherId) {
+      alert('You must be logged in to create a quiz.');
+      return;
+    }
+
+    const quizData = {
       title: quizTitle,
       description: quizDescription,
-      questions,
-    });
-    // Add your form submission logic here (e.g., API call)
+      teacherId: teacherId, // Add teacherId to the quiz data
+      questions: questions.map((q) => ({
+        questionText: q.text,
+        options: q.options,
+        correctAnswer: q.correctAnswer,
+      })),
+    };
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/create-quiz', quizData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`, // Include the token in the request header
+        },
+      });
+      alert('Quiz created successfully!');
+      console.log('Server response:', response.data);
+
+      // Reset form
+      setQuizTitle('');
+      setQuizDescription('');
+      setQuestions([
+        {
+          id: 1,
+          text: '',
+          options: ['', '', '', ''],
+          correctAnswer: null,
+        },
+      ]);
+    } catch (error) {
+      console.error('Error creating quiz:', error.response?.data || error.message);
+      alert('Failed to create quiz');
+    }
   };
 
   return (
@@ -76,6 +120,7 @@ const QuizForm = () => {
       </div>
 
       <form onSubmit={handleSubmit}>
+        {/* Quiz Title */}
         <div className="pf-form-group">
           <label htmlFor="quizTitle">Quiz Title</label>
           <input
@@ -88,6 +133,7 @@ const QuizForm = () => {
           />
         </div>
 
+        {/* Quiz Description */}
         <div className="pf-form-group">
           <label htmlFor="quizDescription">Quiz Description</label>
           <textarea
@@ -99,17 +145,27 @@ const QuizForm = () => {
           />
         </div>
 
+        {/* Quiz Type */}
         <div className="pf-form-group">
           <label>Quiz Type</label>
           <div className="pf-quiz-type">
-            <input type="radio" name="quizType" value="multiple" defaultChecked />
+            <input
+              type="radio"
+              name="quizType"
+              value="multiple"
+              defaultChecked
+              disabled
+            />
             <span>Multiple Choice</span>
           </div>
         </div>
 
+        {/* Questions */}
         {questions.map((question) => (
           <div key={question.id} className="pf-question-block">
             <div className="pf-question-number">Question {question.id}</div>
+
+            {/* Question Text */}
             <div className="pf-form-group">
               <label>Question</label>
               <textarea
@@ -122,6 +178,7 @@ const QuizForm = () => {
               />
             </div>
 
+            {/* Options */}
             <div className="pf-options-group">
               {question.options.map((option, idx) => (
                 <div key={idx} className="pf-option-item">
@@ -130,6 +187,7 @@ const QuizForm = () => {
                     name={`correct-${question.id}`}
                     checked={question.correctAnswer === idx}
                     onChange={() => setCorrectAnswer(question.id, idx)}
+                    required
                   />
                   <input
                     type="text"
@@ -144,6 +202,7 @@ const QuizForm = () => {
               ))}
             </div>
 
+            {/* Remove Question Button */}
             <button
               type="button"
               className="pf-remove-question"
@@ -154,11 +213,13 @@ const QuizForm = () => {
           </div>
         ))}
 
+        {/* Buttons */}
         <button type="button" className="pf-add-question-btn" onClick={addQuestion}>
           Add Question
         </button>
+
         <button type="submit" className="pf-submit-quiz-btn">
-          Save
+          Save Quiz
         </button>
       </form>
     </div>
