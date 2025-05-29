@@ -7,17 +7,17 @@ const CreateAccount = () => {
     fullName: "",
     email: "",
     password: "",
-    userType: "student" // Default to student
+    userType: "student" 
   });
-  const [error, setError] = useState(""); // Add error state
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [error, setError] = useState(""); 
+  const [loading, setLoading] = useState(false); 
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    setError(""); // Clear error when user types
+    setError(""); 
   };
 
   const handleSubmit = async (e) => {
@@ -39,10 +39,7 @@ const CreateAccount = () => {
       if (!response.ok) {
         throw new Error(data.message || "Something went wrong");
       }
-
-      // On success
-      console.log("Account created:", data);
-      navigate("/login"); // Navigate to dashboard on success
+      navigate("/login"); 
     } catch (err) {
       setError(err.message);
     } finally {

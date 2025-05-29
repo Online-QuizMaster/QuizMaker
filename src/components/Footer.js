@@ -8,10 +8,10 @@ const Footer = () => {
       <div className="footer-logo-container">
         <img
           src={logo}
-          alt="QuizMaster Logo"
+          alt="Quizee Logo"
           className="footer-logo"
         />
-        <span className="footer-logo-text">QuizMaster</span>
+        <span className="footer-logo-text">Quizee</span>
       </div>
       <div className="footer-interaction">
         <div className="comment-section">
@@ -57,7 +57,7 @@ const Footer = () => {
       </div>
       <div className="footer-bottom">
         <p></p>
-        <p>© 2025 QuizMaster. All rights reserved.</p>
+        <p>© 2025 Quizee. All rights reserved.</p>
         <div className="social-links">
           <a href="#"><img src="https://cdn.pixabay.com/photo/2017/08/23/11/30/twitter-2672572_1280.jpg" alt="Twitter" /></a>
           <a href="#"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTG0JSLlZXZTWhYHDW6sx4clu4yqwgBIm4Dfg&s" alt="Facebook" /></a>

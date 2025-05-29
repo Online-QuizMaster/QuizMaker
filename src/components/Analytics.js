@@ -14,7 +14,7 @@ const Analytics = () => {
             alt="Icon"
           />
           <h3>Interactive Quizzes</h3>
-          <p>QuizMaster offers a fun, interactive experience for all users.</p>
+          <p>Quizee offers a fun, interactive experience for all users.</p>
         </div>
         <div className="analytics-card">
           <img

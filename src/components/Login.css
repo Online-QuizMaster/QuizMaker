@@ -2,9 +2,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* background-image: url('../Assets/loginbg.jpg'); */
     height: 100vh;
-    
     color: white;
 
   }

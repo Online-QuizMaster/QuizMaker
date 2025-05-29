@@ -1,13 +1,11 @@
-// src/utils/auth.js
-import { jwtDecode } from 'jwt-decode'; // Corrected import
+import { jwtDecode } from 'jwt-decode'; 
 
-// Get the user type (teacher or student) from the token
 export const getUserTypeFromToken = () => {
   const token = localStorage.getItem('token');
   if (!token) return null;
 
   try {
-    const decoded = jwtDecode(token); // Using jwtDecode instead of jwt_decode
+    const decoded = jwtDecode(token); 
     console.log('Decoded token:', decoded);
     return decoded.userType || null;
   } catch (err) {
@@ -16,28 +14,37 @@ export const getUserTypeFromToken = () => {
   }
 };
 
-// Get the first letter of the user's full name
 export const getUserInitialFromToken = () => {
   const token = localStorage.getItem('token');
   if (!token) return null;
 
-  try {
-    const decoded = jwtDecode(token); // Using jwtDecode instead of jwt_decode
-    const name = decoded.fullName || '';
-    return name.charAt(0).toUpperCase();
-  } catch (err) {
-    console.error('Error decoding token:', err);
-    return null;
-  }
+  const decodedToken = jwtDecode(token);
+  const fullName = decodedToken.fullName; 
+  const initials = fullName.split(' ').map(name => name[0]).join('').toUpperCase();
+  
+  return initials;
 };
 
-// Get the teacher ID from the token (assuming it's in the user_id field)
 export const getTeacherId = () => {
   const token = localStorage.getItem('token');
   if (token) {
     try {
-      const decodedToken = jwtDecode(token); // Using jwtDecode instead of jwt_decode
+      const decodedToken = jwtDecode(token); 
      
+      return decodedToken.userid; 
+    } catch (err) {
+      console.error('Invalid token:', err);
+      return null;
+    }
+  }
+  return null;
+};
+
+export const getUserId = () => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    try {
+      const decodedToken = jwtDecode(token); 
       return decodedToken.userid; 
     } catch (err) {
       console.error('Invalid token:', err);

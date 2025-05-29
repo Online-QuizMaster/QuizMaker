@@ -7,7 +7,7 @@ const Features = () => {
   return (
     <section className="features">
       <h2>Features Overview</h2>
-      <p>Explore the unique features of QuizMaster to enhance your quiz experience.</p>
+      <p>Explore the unique features of Quizee to enhance your quiz experience.</p>
       <div className="features-grid">
         <div className="feature-card">
           <h3>Dynamic Quiz Creation</h3>

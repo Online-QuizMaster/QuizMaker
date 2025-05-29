@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Header.css';
 import logo from '../Assets/Logo.png';
 import { Link, useNavigate } from 'react-router-dom';
-import { getUserInitialFromToken } from '../utils/auth'; // Import utility
+import { getUserInitialFromToken } from '../utils/auth'; 
 
 const Header = () => {
   const [userInitial, setUserInitial] = useState(null);
@@ -23,8 +23,8 @@ const Header = () => {
   return (
     <header className="header">
       <div className="logo-nav">
-        <img src={logo} alt="QuizMaster Logo" className="logo" />
-        <h2 className='ram'><b>QuizMaster</b></h2>
+        <img src={logo} alt="Quizee Logo" className="logo" />
+        <h2 className="ram"><b>Quizee</b></h2>
         <nav className="left-nav">
           <ul>
             <li><Link to="/">Home</Link></li>

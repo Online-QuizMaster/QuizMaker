@@ -8,7 +8,7 @@ const Login = () => {
     password: '',
   });
   const [error, setError] = useState('');
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,11 +29,11 @@ const Login = () => {
 
       const data = await response.json();
       console.log('Response data:', data);
+
       if (response.ok) {
-        // Save token and name in local storage
+        localStorage.setItem('user', JSON.stringify(data.user));
         localStorage.setItem('token', data.token);
-        localStorage.setItem('name', data.name);
-        navigate('/'); // Redirect to homepage or dashboard
+        navigate('/');
       } else {
         setError(data.message || 'Login failed');
       }
@@ -68,9 +68,6 @@ const Login = () => {
               onChange={handleChange}
               required
             />
-          </div>
-          <div className="forget-password">
-            <Link to="/forget-password">Forget password?</Link>
           </div>
           <button type="submit" className="login-btn">
             Log In

@@ -1,78 +1,75 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import './Profile.css';
-import java from '../Assets/java.png';
-import apti from '../Assets/apti.png';
-import cn from '../Assets/cn.webp';
-import dbms from '../Assets/dbms.webp';
-import { getUserTypeFromToken } from '../utils/auth';
-
-const quizzes = [
-  {
-    id: 1,
-    title: 'Java/OOp',
-    description: 'Test your Java skills with this exciting quiz! ☕💻.',
-    updated: 'Updated 2 days ago',
-    image: java,
-  },
-  {
-    id: 2,
-    title: 'Aptitude',
-    description: 'Challenge your logical thinking with this aptitude quiz! 🧠🔢.',
-    updated: 'Updated 3 days ago',
-    image: apti,
-  },
-  {
-    id: 3,
-    title: 'Computer Network',
-    description: 'Test your knowledge of computer networks with this quiz! 🌐💻.',
-    updated: 'Updated 1 week ago',
-    image: cn,
-  },
-  {
-    id: 4,
-    title: 'Data base management System',
-    description: 'Evaluate your DBMS skills with this challenging quiz! 🗄️🔍.',
-    updated: 'Updated 5 days ago',
-    image: dbms,
-  },
-];
+import React, { useEffect, useState, useRef } from "react";
+import axios from "axios";
+import {jwtDecode} from "jwt-decode";
+import './Profile.css'; 
 
 const Profile = () => {
+  const [studentResults, setStudentResults] = useState([]);
+  const [average, setAverage] = useState(null);
+  const [teacherResults, setTeacherResults] = useState([]);
+  const [userType, setUserType] = useState("");
+  const [userId, setUserId] = useState("");
   const sliderRef = useRef(null);
-  const [userType, setUserType] = useState('');
 
   useEffect(() => {
-    const type = getUserTypeFromToken();
-    setUserType(type);
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decoded = jwtDecode(token);
+      setUserType(decoded.userType);
+      setUserId(decoded.userid);
+
+      if (decoded.userType === "student") {
+        fetchStudentResults(decoded.userid);
+      } else if (decoded.userType === "teacher") {
+        fetchTeacherResults(decoded.userid);
+      }
+    }
   }, []);
+
+  const fetchStudentResults = async (userId) => {
+    try {
+      const res = await axios.get(`http://localhost:5000/api/user-stats/${userId}`);
+      setStudentResults(res.data.completed || []);
+      setAverage(res.data.average);
+    } catch (error) {
+      console.error("Error fetching student stats", error);
+    }
+  };
+
+  const fetchTeacherResults = async (teacherId) => {
+    try {
+      const res = await axios.get(`http://localhost:5000/api/teacher-results/${teacherId}`);
+      setTeacherResults(res.data || []);
+    } catch (error) {
+      console.error("Error fetching teacher results", error);
+    }
+  };
 
   const scrollLeft = () => {
     if (sliderRef.current) {
-      sliderRef.current.scrollBy({ left: -300, behavior: 'smooth' });
+      sliderRef.current.scrollLeft -= 200; 
     }
   };
 
   const scrollRight = () => {
     if (sliderRef.current) {
-      sliderRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+      sliderRef.current.scrollLeft += 200; 
     }
   };
 
   return (
-    <div className="pf-profile-page">
-      <h1 className="pf-heading">{userType === 'teacher' ? 'Your Quizzes' : 'Your Result'}</h1>
-
+    <div style={{ padding: "20px" }}>
+      <h2 className="head-h2">Profile Page</h2>
       {userType === 'student' && (
         <div className="pf-stats-section">
           <div className="pf-stat-card">
             <h3>Completed Quizzes</h3>
-            <p className="pf-stat-value">7</p>
+            <p className="pf-stat-value">{studentResults.length}</p>
             <span className="pf-icon pf-trophy-icon">🏆</span>
           </div>
           <div className="pf-stat-card">
             <h3>Average Score</h3>
-            <p className="pf-stat-value">85.5%</p>
+            <p className="pf-stat-value">{average ? average.toFixed(1) : 'N/A'}%</p>
             <span className="pf-icon pf-chart-icon">📊</span>
           </div>
           <div className="pf-stat-card pf-stats-overview">
@@ -80,24 +77,16 @@ const Profile = () => {
             <div className="pf-slider-container">
               <button className="pf-slider-arrow pf-arrow-left" onClick={scrollLeft}>◄</button>
               <div className="pf-stat-slider" ref={sliderRef}>
-                <div className="pf-stat-item">
-                  <p>Users Online</p>
-                  <p className="pf-stat-value">1,245</p>
-                  <p className="pf-stat-change positive">+85%</p>
-                  <div className="pf-placeholder-chart pf-bar-chart"></div>
-                </div>
-                <div className="pf-stat-item">
-                  <p>New Signups</p>
-                  <p className="pf-stat-value">320</p>
-                  <p className="pf-stat-change positive">+45%</p>
-                  <div className="pf-placeholder-chart pf-line-chart"></div>
-                </div>
-                <div className="pf-stat-item">
-                  <p>Page Views</p>
-                  <p className="pf-stat-value">8,750</p>
-                  <p className="pf-stat-change negative">-60%</p>
-                  <div className="pf-placeholder-chart pf-pie-chart"></div>
-                </div>
+                {studentResults.map((quiz, index) => (
+                  <div key={index} className="pf-stat-item">
+                    <p>{quiz.quizName}</p>
+                    <p className="pf-stat-value">{quiz.mark.toFixed(2)}%</p>
+                    <p className={`pf-stat-change ${quiz.mark >= 50 ? 'positive' : 'negative'}`}>
+                      {quiz.mark >= 50 ? '+Good' : '-Improve'}
+                    </p>
+                    <div className="pf-placeholder-chart pf-bar-chart"></div>
+                  </div>
+                ))}
               </div>
               <button className="pf-slider-arrow pf-arrow-right" onClick={scrollRight}>►</button>
             </div>
@@ -105,35 +94,29 @@ const Profile = () => {
         </div>
       )}
 
-      {/* Quiz Section */}
-      <div className="pf-quiz-section">
-        <div className="pf-quiz-grid">
-          {quizzes.map((quiz) => (
-            <div key={quiz.id} className="pf-quiz-card">
-              <img src={quiz.image} alt={quiz.title} className="pf-quiz-image" />
-              <div className="pf-quiz-content">
-                <h3>{quiz.title}</h3>
-                <p className="pf-description">{quiz.description}</p>
-                <Link to={`/quiz/${quiz.id}`} className="pf-start-quiz-btn">
-                  Start Quiz
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Create Quiz Button */}
-      {userType === 'teacher' && (
-        <div className="pf-create-quiz-section">
-          <Link to="/create" className="pf-create-quiz-btn">
-            <span className="pf-plus-icon">➕</span> Create Quiz
-          </Link>
-        </div>
+      {userType === "teacher" && (
+        <>
+          <h3>Student Results for Your Quizzes</h3>
+          <table border="1" cellPadding="10">
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Quiz Name</th>
+                <th>Marks</th>
+              </tr>
+            </thead>
+            <tbody>
+              {teacherResults.map((entry, index) => (
+                <tr key={index}>
+                  <td>{entry.studentName}</td>
+                  <td>{entry.quizName}</td>
+                  <td>{entry.mark.toFixed(2)}%</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
       )}
-
-
-      <footer className="pf-footer"></footer>
     </div>
   );
 };
