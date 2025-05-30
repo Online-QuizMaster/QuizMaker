@@ -32,7 +32,7 @@ const QuizPage = () => {
 
   const fetchQuiz = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/get-quiz/${quizId}`);
+      const response = await axios.get(`https://quizee-backend-vge7.onrender.com/api/get-quiz/${quizId}`);
       setQuiz(response.data);
     } catch (error) {
       console.error('Error fetching quiz:', error);
@@ -78,7 +78,7 @@ const QuizPage = () => {
       const userType = getUserTypeFromToken();
 
       if (userId && userType === 'student') {
-        await axios.post('http://localhost:5000/api/mark-quiz-complete', {
+        await axios.post('https://quizee-backend-vge7.onrender.com/api/mark-quiz-complete', {
           _id: userId,
           quizId: quizId,
           marks: finalScore,

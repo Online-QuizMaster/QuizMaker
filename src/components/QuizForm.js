@@ -82,7 +82,7 @@ const QuizForm = () => {
     };
 
     try {
-      const response = await axios.post('http://localhost:5000/api/create-quiz', quizData, {
+      const response = await axios.post('https://quizee-backend-vge7.onrender.com/api/create-quiz', quizData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`, 
         },

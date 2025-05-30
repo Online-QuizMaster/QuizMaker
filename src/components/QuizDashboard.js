@@ -51,7 +51,7 @@ const QuizDashboard = () => {
 
     const fetchQuizzes = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/get-all-quizzes');
+        const response = await axios.get('https://quizee-backend-vge7.onrender.com/api/get-all-quizzes');
         console.log('Server response:', response.data);
 
         const apiQuizzes = response.data.quizzes
@@ -89,7 +89,7 @@ const QuizDashboard = () => {
     if (!window.confirm("Are you sure you want to delete this quiz?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/delete-quiz/${quizId}`, {
+      await axios.delete(`https://quizee-backend-vge7.onrender.com/api/delete-quiz/${quizId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },

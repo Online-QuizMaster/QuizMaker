@@ -28,7 +28,7 @@ const Profile = () => {
 
   const fetchStudentResults = async (userId) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/user-stats/${userId}`);
+      const res = await axios.get(`https://quizee-backend-vge7.onrender.com/api/user-stats/${userId}`);
       setStudentResults(res.data.completed || []);
       setAverage(res.data.average);
     } catch (error) {
@@ -38,7 +38,7 @@ const Profile = () => {
 
   const fetchTeacherResults = async (teacherId) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/teacher-results/${teacherId}`);
+      const res = await axios.get(`https://quizee-backend-vge7.onrender.com/api/teacher-results/${teacherId}`);
       setTeacherResults(res.data || []);
     } catch (error) {
       console.error("Error fetching teacher results", error);
