@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, FormEvent } from 'react';
 import { Mail, Lock, Eye, EyeOff, User, ArrowRight } from 'lucide-react';
 import './Login.css';
 
@@ -8,13 +8,39 @@ function Login() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    // Simulate login process
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsLoading(false);
+
+    try {
+      const response = await fetch('https://quizee-backend-vge7.onrender.com/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // If you use cookies
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message || 'Login failed');
+      } else {
+        alert('Login successful');
+
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('name', data.name);
+        localStorage.setItem('userType', data.userType);
+
+        window.location.href = '/dashboard';
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Server error. Try again later.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -25,9 +51,7 @@ function Login() {
       </div>
 
       <div className="login-wrapper">
-        {/* Main Login Card */}
         <div className="login-card">
-          {/* Header */}
           <div className="header">
             <div className="logo-container">
               <User className="logo-icon" />
@@ -36,13 +60,9 @@ function Login() {
             <p className="subtitle">Access your personalized quiz dashboard</p>
           </div>
 
-          {/* Login Form */}
           <form onSubmit={handleSubmit} className="form">
-            {/* Email Field */}
             <div className="form-group">
-              <label htmlFor="email" className="form-label">
-                Email Address
-              </label>
+              <label htmlFor="email" className="form-label">Email Address</label>
               <div className="input-wrapper">
                 <Mail className="input-icon" />
                 <input
@@ -57,11 +77,8 @@ function Login() {
               </div>
             </div>
 
-            {/* Password Field */}
             <div className="form-group">
-              <label htmlFor="password" className="form-label">
-                Password
-              </label>
+              <label htmlFor="password" className="form-label">Password</label>
               <div className="input-wrapper">
                 <Lock className="input-icon" />
                 <input
@@ -83,29 +100,17 @@ function Login() {
               </div>
             </div>
 
-            {/* Remember Me & Forgot Password */}
             <div className="form-options">
               <label className="checkbox-wrapper">
-                <input
-                  type="checkbox"
-                  className="checkbox"
-                />
+                <input type="checkbox" className="checkbox" />
                 <span className="checkbox-label">Remember me</span>
               </label>
-              <button
-                type="button"
-                className="forgot-password"
-              >
+              <button type="button" className="forgot-password">
                 Forgot password?
               </button>
             </div>
 
-            {/* Login Button */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="login-button"
-            >
+            <button type="submit" disabled={isLoading} className="login-button">
               {isLoading ? (
                 <div className="button-content">
                   <div className="loading-spinner"></div>
@@ -120,7 +125,6 @@ function Login() {
             </button>
           </form>
 
-          {/* Sign Up Link */}
           <div className="signup-section">
             <p className="signup-text">
               Need to create an account?{' '}
